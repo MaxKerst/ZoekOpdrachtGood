@@ -5,6 +5,10 @@
  */
 package zoekopdracht;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -30,6 +34,8 @@ public class FXMLDocumentController implements Initializable {
 
     private Search search = new Search();
     @FXML
+    private Button btnOpen;
+    @FXML
     private Button btnBrowse;
     @FXML
     private TextField txtDir;
@@ -43,10 +49,15 @@ public class FXMLDocumentController implements Initializable {
     private TextField txtParameter;
 
     @FXML
-    private void openFileDialog() {
+    private void openFolderDialog() {
         DirectoryChooser chooseDir = new DirectoryChooser();
         String result = chooseDir.showDialog(btnBrowse.getScene().getWindow()).toString();
         txtDir.setText(result);
+    }
+
+    @FXML
+    private void openFileDialog() {
+
     }
 
     @FXML
@@ -61,7 +72,6 @@ public class FXMLDocumentController implements Initializable {
                 alert.setHeaderText("Search parameter required!");
                 alert.setContentText("Please enter a search query.");
                 alert.showAndWait();
-
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -69,15 +79,27 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void saveToFile() {
-//        String path = "";
-//        List<String> contents = (List<String>) lvResults.getItems().stream().map(Object::toString).collect(Collectors.toList());
-//        Files.write(path, contents);
-//        Files.write(path, contents, StandardCharsets.UTF_8);
+    private void saveToFile() throws IOException {
+        String content = "You searched for " + txtParameter.getText() + " which resulted in" + search.getResults().size() + " results." + '\n';
+
+        for (Object s : search.getResults()) {
+            content += s.toString() + '\n';
+        }
+
+        File file = new File("SearchResults.rtf");
+
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(content);
+        bw.close();
     }
 
-@Override
-        public void initialize(URL url, ResourceBundle rb) {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
 
