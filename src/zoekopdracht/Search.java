@@ -6,14 +6,7 @@
 package zoekopdracht;
 
 import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
@@ -48,12 +41,12 @@ public class Search {
         if (dir != null) {
             for (File f : dir) {
                 if (f != null) {
-                    if (f.isDirectory()) {
+                    if (f.isDirectory() && !f.isHidden()) {
                         if (f.getName().toLowerCase().contains(parameter.toLowerCase())) {
                             _results.add(f);
                         }
                         findResults(f.getPath(), parameter);
-                    } else if (f.getName().toLowerCase().contains(parameter.toLowerCase())) {
+                    } else if (f.getName().toLowerCase().contains(parameter.toLowerCase()) && !f.isHidden()) {
                         _results.add(f);
                     }
                 }
